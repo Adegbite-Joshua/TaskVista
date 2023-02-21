@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="shortcut icon" href="todo.jpeg" type="image/x-icon">
+</head>
+<style>
+    @media (max-width: 768px) {
+        .smallDeviceWidth {
+            width: 100% !important;
+        }
+
+        .smallDeviceHeight1 {
+            height: 25% !important;
+        }
+
+        .smallDeviceHeight2 {
+            height: 70% !important;
+        }
+
+        .smallDeviceButton {
+            width: 20% !important;
+        }
+
+        .smallDeviceInput {
+            width: 50% !important;
+        }
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'poppins', sans-serif;
+    }
+
+    .containerp {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btnp {
+        padding: 10px 60px;
+        background: #fff;
+        border: 0;
+        outline: none;
+        cursor: pointer;
+        font-size: 22px;
+        font-weight: 500;
+        border-radius: 30px;
+    }
+
+    .popup {
+        width: 400px;
+        background: #fff;
+        border-radius: 6px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.1);
+        text-align: center;
+        padding: 0 30px 30px;
+        color: #333;
+        visibility: hidden;
+        transition: transform 0.4s, top 0.4s;
+    }
+    .popupSearch {
+        width: 600px !important;
+        height: 700px;
+    }
+
+    .open-popup {
+        visibility: visible;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .popup h2 {
+        font-size: 38px;
+        font-weight: 500;
+        margin: 30px 0 10px;
+    }
+
+    .popup #button1 {
+        width: 100%;
+        margin-top: 50px;
+        padding: 10px 0;
+        background: #198754;
+        color: #fff;
+        border: 0;
+        outline: none;
+        font-size: 18px;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width:700px) {
+        .popup {
+            width: 300px;
+        }
+    }
+
+    .noTask {
+        animation-name: goingDown;
+        animation-direction: alternate-reverse;
+        animation-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+        animation-fill-mode: both;
+        animation-play-state: running;
+    }
+
+    @keyframes goingDown {
+        100% {
+            transform: translateY(300px);
+        }
+    }
+</style>
+
+<body onload="displayTodo()" class="bg-warning">
+    <div style="height: 100vh; width: 100vw;" class="row">
+        <div class="col-12 col-md-4 smallDeviceHeight1 h-100">
+            <div class="mt-0 mt-md-5 d-block mx-2 my-auto">
+                <p id="invalidInput" class="text-danger text-center"></p>
+                <input type="text" class="form-control my-1 my-md-2" placeholder="Todo Title" id="todoTitle">
+                <input type="text" class="form-control my-1 my-md-2" placeholder="Todo Body" id="todoBody">
+                <div class="row w-100 mx-auto">
+                    <button onclick="openPopup2()"
+                        class="btn btn-success  smallDeviceButton w-100 smallDeviceButton mx-auto mx-md-0 my-2 d-md-none">Search here</button>
+                    <input type="datetime-local" class="form-control smallDeviceInput w-100 my-2 mx-auto mx-md-0"
+                        placeholder="Todo Time" id="todoTime">
+                    <button onclick="addTodo()"
+                        class="btn btn-success  smallDeviceButton w-100 smallDeviceButton mx-auto mx-md-0 my-2">Add
+                        Todo</button>
+                    <button class="btn btn-success my-2 mx-auto d-none d-md-block" onclick="deleteAllTodo()">Delete All Todo</button>
+                </div>
+            </div>
+            <div class="d-none d-md-block">
+                <h1 id="categoryShow" class="text-center my-5"></h1>
+                <p id="todoCategoryInformation" class="text-danger text-center"></p>
+                <input type="text" name="" id="searchInput" class="form-control"
+                    placeholder="Search your task with the number or the task title">
+                <button onclick="searchTodo()" class="btn btn-success w-50 d-block mx-auto my-2">Search Todo</button>
+                <div id="displaySearc"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-8 smallDeviceHeight2 h-100 overflow-auto" id="display">
+        </div>
+    </div>
+    <div class="containerp">
+        <div class="popup" id="popup">
+            <button type="button" class="btn-close ms-auto d-block my-2" onclick="closePopup()"
+                aria-label="Close"></button>
+            <input type="text" class="form-control my-2 mt-5" placeholder="Todo Title Replace" id="todoReplaceTitle">
+            <input type="text" class="form-control my-2" placeholder="Todo Body Replace" id="todoReplaceBody">
+            <input type="datetime-local" class="form-control my-2" placeholder="Todo Time Replace" id="todoReplaceTime">
+            <button type="button" id="button1" onclick="editTodo()">Replace Todo</button>
+        </div>
+    </div>
+    <div class="containerp d-block d-md-none">
+        <div class="popup popupSearch" id="popup2">
+            <button type="button" class="btn-close ms-auto d-block my-2" onclick="closePopup2()"
+                aria-label="Close"></button>
+                <input type="text" name="" id="searchInput2" class="form-control"
+                placeholder="Search your task with the number or the task title">
+                <button onclick="searchTodo2()" class="btn btn-success w-50 d-block mx-auto my-2">Search Todo</button>
+                <div id="displaySearc2"></div>
+            <button type="button" id="button1" onclick="closePopup2()">Close</button>
+        </div>
+    </div>
+
+
+    <script>
+        let allUsers = JSON.parse(localStorage.getItem("allUsers"))
+        let currentUserIndex = Number(localStorage.getItem("currentUserIndex"))
+        let addingTodoIndex = Number(localStorage.getItem("addTodoIndex"))
+        let addingTodoCategory = localStorage.getItem("addTodoCategory")
+        let editingIndexVariable = -200
+        // console.log(allUsers[currentUserIndex].userTodos[5])
+        // console.log(addingTodoIndex)
+        // console.log(addingTodoIndex)
+        categoryShow.innerText = `${addingTodoCategory}`
+        title.innerText = `${allUsers[currentUserIndex].firstName} | ${addingTodoCategory}`
+        const addTodo = () => {
+            if (todoTitle.value.trim() == "" || todoBody.value.trim() == "" || todoTime.value.trim() == "") {
+                invalidInput.innerText = `Enter all the required information about your task`
+                setTimeout(()=>invalidInput.innerText = "", 3000)
+            } else{
+                let todo = {
+                todoTitle: todoTitle.value,
+                todoBody: todoBody.value,
+                todoTime: todoTime.value
+                }
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][0].push(todo)
+                localStorage.setItem("allUsers", JSON.stringify(allUsers))
+                // console.log(allUsers[currentUserIndex].userTodos[])
+                // console.log(allUsers[currentUserIndex].userTodos[addingTodoIndex])
+                // console.log(addingTodoIndex)
+                todoTitle.value = ""
+                todoBody.value = ""
+                todoTime.value = ""
+                displayTodo()
+                }
+        }
+        const displayTodo = () => {
+            display.innerHTML = ""
+            if (allUsers[currentUserIndex].userTodos[addingTodoIndex][0].length == 0 && allUsers[currentUserIndex].userTodos[addingTodoIndex][1].length == 0) {
+                display.innerHTML += `<p class="noTask bg-success p-2 text-center my-5 rounded-pill text-white">You don't have any task under this category</p>`
+            } else {
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][0].map((user, index, allUsers) => {
+                    display.innerHTML += `
+                    <div class="bg-success p-1 m-1 rounded-pill" id="scroolTodo${index}">
+                    <p class="text-white"><span class="px-2 px-md-5">${index + 1}.</span><span class="text-start text-md-center"> You planned: ${user.todoTitle} at ${user.todoTime}</span></p>
+                    <p class="text-white"><span class="px-2 px-md-5">Description:</span><span class="text-start text-md-center"> ${user.todoBody}.</span><span onclick="markAsDone(${index})" class="float-end mx-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  fill="none" viewBox="0 0 16 16"><path fill="#fff" fill-rule="evenodd" d="M2 1a2 2 0 00-2 2v10a2 2 0 002 2h4.05a2.512 2.512 0 01-.05-.5V14H2a1 1 0 01-1-1V3a1 1 0 011-1h3.75a1 1 0 01.8.4L7.6 3.8l.15.2H14a1 1 0 011 1v1.05c.37.075.71.231 1 .45V5a2 2 0 00-2-2H8.25l-.9-1.2a2 2 0 00-1.6-.8H2z" clip-rule="evenodd"/><path stroke="#fff" d="M.5 4.5h5.546a1.5 1.5 0 00.832-.252L8 3.5"/><path fill="#fff" fill-rule="evenodd" d="M8.5 7A1.5 1.5 0 007 8.5v6A1.5 1.5 0 008.5 16h6a1.5 1.5 0 001.5-1.5v-6A1.5 1.5 0 0014.5 7h-6zm5.898 3.398a.562.562 0 10-.796-.796L10.5 12.704l-1.102-1.102a.562.562 0 10-.796.796l1.5 1.5c.22.22.576.22.796 0l3.5-3.5z" clip-rule="evenodd"/></svg></span> <span onclick='deleteTodo(${index})' class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/></svg></span><span class="float-end me-3 " onclick="openPopup(${index})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/></svg></span></p>
+                    </div>
+                `
+                }
+                )
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][1].map((user, index, allUsers) => {
+                display.innerHTML += `
+                                    <p id="scrollDone${index}" style="text-decoration: line-through red 2px double; opacity: 75; font-size: 20px;" class="bg-info my-2 p-2 rounded-pill text-white"><span class="pe-5">${index + 1}.</span>You planned: ${user.todoBody}<span onclick='deleteTodo2(${index})' class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/></svg></span></p>
+                                    `
+                displaySearc.innerHTML = ""
+                })
+            }
+            taskNumber()
+        }
+        const deleteTodo = (deleteIndex) => {
+            allUsers[currentUserIndex].userTodos[addingTodoIndex][0] = allUsers[currentUserIndex].userTodos[addingTodoIndex][0].filter((todo, index) => deleteIndex != index)
+            localStorage.setItem("allUsers", JSON.stringify(allUsers))
+            displayTodo()
+        }
+        const deleteTodo2 = (deleteIndex) => {
+            allUsers[currentUserIndex].userTodos[addingTodoIndex][1] = allUsers[currentUserIndex].userTodos[addingTodoIndex][1].filter((todo, index) => deleteIndex != index)
+            localStorage.setItem("allUsers", JSON.stringify(allUsers))
+            displayTodo()
+        }
+        const openPopup = (editingIndex) => {
+            popup.classList.add("open-popup")
+            editingIndexVariable = editingIndex
+        }
+        function editTodo() {
+            let newTodo = {
+                todoTitle: todoReplaceTitle.value,
+                todoBody: todoReplaceBody.value,
+                todoTime: todoReplaceTime.value
+            }
+            allUsers[currentUserIndex].userTodos[addingTodoIndex][0][editingIndexVariable] = newTodo
+            localStorage.setItem("allUsers", JSON.stringify(allUsers))
+            displayTodo()
+            closePopup()
+        }
+        const closePopup = () => {
+            popup.classList.remove("open-popup")
+        }
+        const markAsDone = (markAsDoneIndex) => {
+            let userTaskStatusDecision = confirm("Are you sure you have performed this task")
+            if (userTaskStatusDecision==true) {
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][1].push(allUsers[currentUserIndex].userTodos[addingTodoIndex][0][markAsDoneIndex])
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][0] = allUsers[currentUserIndex].userTodos[addingTodoIndex][0].filter((todo, index) => markAsDoneIndex != index)
+                localStorage.setItem("allUsers", JSON.stringify(allUsers))
+                displayTodo()
+            } else {
+                alert("The mark as done operation has been cancelled successfully")
+            }
+        }
+        const searchTodo = () => {
+            // console.log(searchInput.value)
+            let searchIndex = 200.9
+                if (allUsers[currentUserIndex].userTodos[addingTodoIndex][0].length >= 1 && allUsers[currentUserIndex].userTodos[addingTodoIndex][0].length >= searchInput.value) {
+                    searchIndex = searchInput.value - 1
+                    // console.log(searchIndex)
+                    displaySearch(0, searchIndex)
+                } else if (allUsers[currentUserIndex].userTodos[addingTodoIndex][1].length >= 1 && allUsers[currentUserIndex].userTodos[addingTodoIndex][1].length >= searchInput.value) {
+                    searchIndex = searchInput.value - 1
+                    // console.log(searchIndex)
+                    displaySearch(1, searchIndex)
+
+                } else {
+                    displaySearc.innerHTML = `<p class="bg-success p-2 rounded-pill text-white text-center">There is no match for your search</p>`
+            }
+            if (searchInput.value.trim() != "") {
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][0].map((user, index) => {
+                    if (user.todoTitle == searchInput.value) {
+                        displaySearch(0, index)
+                    }
+                })
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][1].map((user, index) => {
+                    if (user.todoTitle == searchInput.value) {
+                        displaySearch(1, index)
+                    }
+                })
+                
+            } else {
+                displaySearc.innerHTML = `<p class="bg-success p-2 rounded-pill text-warning text-center">The search input is empty</p>`
+                setTimeout(() => {displaySearc.innerHTML = "" }, 4000)
+                
+            }
+        }
+        const displaySearch = (status, index) => {
+            displaySearc.innerHTML = ""
+            // console.log(index)
+            if (status == 0) {
+                displaySearc.innerHTML += `
+                    <a href="#scroolTodo${index}">
+                        <div class="bg-success p-1 m-1 rounded-pill">
+                        <p class="text-white"><span class="ps-4 pe-2">${index + 1}.</span><span class="text-center"> You planned: ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoTitle} at ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoTime}</span></p>
+                        <p class="text-white"><span>Description:</span><span class="ps-3"> ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoBody}.</span> <span onclick='deleteTodo(${index})' class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/></svg></span><span class="float-end me-3 " onclick="openPopup(${index})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/></svg></span></p>
+                        </div>
+                    </a>
+                `
+            } else if (status == 1) {
+                displaySearc.innerHTML += `
+                <a href="#scrollDone${index}">
+                    <p style="text-decoration: line-through red 2px double; opacity: 75; font-size: 20px;" class="bg-info p-2 rounded-pill text-white"><span class="pe-2">${index + 1}.</span>You planned: ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoBody}<span onclick='deleteTodo2(${index})' class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/></svg></span></p>
+                </a>
+                `
+            }
+        }
+        const taskNumber = () => {
+            todoCategoryInformation.innerText = `You have ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0].length} task(s) to complete under ${addingTodoCategory}.`
+        }
+        const openPopup2 = (editingIndex) => {
+            popup2.classList.add("open-popup")
+        }
+        const closePopup2 = () => {
+            popup2.classList.remove("open-popup")
+        }
+        const searchTodo2 = () => {
+            // console.log(searchInput2.value)
+            searchIndex = 200.9
+                if (allUsers[currentUserIndex].userTodos[addingTodoIndex][0].length >= 1 && allUsers[currentUserIndex].userTodos[addingTodoIndex][0].length >= searchInput2.value) {
+                    searchIndex = searchInput2.value - 1
+                    // console.log(searchIndex)
+                    displaySearch2(0, searchIndex)
+                } else if (allUsers[currentUserIndex].userTodos[addingTodoIndex][1].length >= 1 && allUsers[currentUserIndex].userTodos[addingTodoIndex][1].length >= searchInput2.value) {
+                    searchIndex = searchInput2.value - 1
+                    // console.log(searchIndex)
+                    displaySearch2(1, searchIndex)
+
+                } else {
+                    displaySearc2.innerHTML = `<p class="bg-success p-2 rounded-pill text-white text-center">There is no match for your search</p>`
+            }
+            if (searchInput2.value.trim() != "") {
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][0].map((user, index) => {
+                    if (user.todoTitle == searchInput2.value) {
+                        displaySearch2(0, index)
+                    }
+                })
+                allUsers[currentUserIndex].userTodos[addingTodoIndex][1].map((user, index) => {
+                    if (user.todoTitle == searchInput2.value) {
+                        displaySearch2(1, index)
+                    }
+                })
+                
+            } else {
+                displaySearc2.innerHTML = `<p class="bg-success p-2 rounded-pill text-warning text-center">The search input is empty</p>`
+                setTimeout(() => {displaySearc2.innerHTML = "" }, 4000)
+                
+            }
+        }
+        const displaySearch2 = (status, index) => {
+            displaySearc2.innerHTML = ""
+            // console.log(index)
+            if (status == 0) {
+                displaySearc2.innerHTML += `
+                    <div class="bg-success p-1 m-1 rounded-pill">
+                    <p class="text-white"><span class="ps-4 pe-2">${index + 1}.</span><span class="text-center"> You planned: ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoTitle} at ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoTime}</span></p>
+                    <p class="text-white"><span>Description:</span><span class="ps-3"> ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoBody}.</span> <span onclick='deleteTodo(${index})' class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/></svg></span><span class="float-end me-3 " onclick="openPopup(${index})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16"><path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/></svg></span></p>
+                    </div>
+                `
+            } else if (status == 1) {
+                displaySearc2.innerHTML += `
+                <p style="text-decoration: line-through red 2px double; opacity: 75; font-size: 20px;" class="bg-info p-2 rounded-pill text-white"><span class="pe-2">${index + 1}.</span>You planned: ${allUsers[currentUserIndex].userTodos[addingTodoIndex][0][index].todoBody}<span onclick='deleteTodo2(${index})' class="float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16"><path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/></svg></span></p>
+                `
+            }
+        }
+        const deleteAllTodo =()=>{
+           let userDeleteDecision = confirm("Are you sure you want to delete all your task(s) under this category")
+           if (userDeleteDecision==true) {
+            allUsers[currentUserIndex].userTodos[addingTodoIndex][0] = []
+            allUsers[currentUserIndex].userTodos[addingTodoIndex][1] = []
+            localStorage.setItem("allUsers", JSON.stringify(allUsers))
+            displayTodo()
+           } else{
+               alert("The delete process has been cancelled successfully")
+           }
+        }
+    </script>
+</body>
+
+</html>

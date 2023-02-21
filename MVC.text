@@ -1,0 +1,19 @@
+allUser = []
+user: {
+    firstName,
+    lastName,
+    eMail,
+    password
+    mainTodo[
+        Work = []
+        Vacation = []
+        Meeting = []
+        Cooking = []
+        Health = []
+        Gift = []
+        Leisure = []
+        Payment = []
+        Others= []
+    ]
+}
+    todoTask{}

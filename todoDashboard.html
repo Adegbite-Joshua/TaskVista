@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="shortcut icon" href="todo.jpeg" type="image/x-icon">
+</head>
+<style>
+    @media (max-width: 800px){
+        .smallDeviceWidth{
+            width: 80% !important;
+        }
+    }
+</style>
+
+<body onload="userLogInCheck()" style="height: 100vh;"  class="bg-warning">
+    <div class="h-75">
+        <div class="h-25 my-5 rounded-2">
+            <div class="container-fluid rounded-2">
+                <h3 class="text-center bg-light shadow-lg w-50 mx-auto p-3 rounded-2">Dashboard<br>Todo Web Application</h3>
+                
+                <h1 class="text-center" id="welcomeGreeting"></h1>
+            </div>
+        </div>
+        <div class="smallDeviceWidth w-50 h-75 my-5 mx-auto bg-warning bg-opacity-50 row row-cols-2 gx-5 mt-5">
+            <div onclick="changeLocation(0, 'Work Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Work</p>
+                <span id="work" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="work.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(1, 'Vacation Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Vacation</p>
+                <span id="vacation" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="beach-chair.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(2, 'Meeting Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Meeting</p>
+                <span id="meeting" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="conversation.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(3, 'Cooking Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Cooking</p>
+                <span id="cooking" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="cooking.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(4, 'Health Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Health</p>
+                <span id="health" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="healthcare.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(5, 'Gift Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Gift</p>
+                <span id="gift" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="gift.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(6, 'Leisure Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Leisure</p>
+                <span id="leisure" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="sunbed.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(7, 'Payment Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Payment</p>
+                <span id="payment" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="income.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <div onclick="changeLocation(8, 'Others Category')" class="col-5 mx-auto my-2 d-flex justify-content-evenly align-items-center position-relative rounded-2 bg-light bg-opacity-50">
+                <p>Others</p>
+                <span id="others" class="position-absolute top-0 start-100 translate-middle bg-info badge rounded-pill"></span>
+                <img src="more.png" alt="" style="height: 50px; width: 50px; display: block;" class="mx-auto my-auto">
+            </div>
+            <!-- <input type="text" placeholder="" id="" class="form-control"> -->
+            <!-- <select name="" id="todoCategory" class="form-control">
+                <option value="">Work</option>
+                <option value="">Vacation</option>
+                <option value="">Meeting</option>
+                <option value="">Cooking</option>
+                <option value="">Health</option>
+                <option value="">Gift</option>
+                <option value="">Leisure</option>
+                <option value="">Payment</option>
+                <option value="">Others</option>
+            </select> -->
+            <!-- <button onclick="addTodo()">Add Todo</button> -->
+            <button style="height: 50px; width: 100px;" onclick="signOut()" class="btn btn-sm btn-md-lg d-block btn-info m-auto">Sign Out</button>
+        </div>
+        
+    </div>
+
+    <script>
+        let allUsers = JSON.parse(localStorage.getItem("allUsers"))
+        let currentUserIndex = Number(JSON.parse(localStorage.getItem("currentUserIndex")))
+        // console.log(allUsers)
+        title.innerText = `${allUsers[currentUserIndex].firstName} | Dashboard`
+        welcomeGreeting.innerText = `${allUsers[currentUserIndex].firstName}, you are welcome`
+        work.innerText = `${allUsers[currentUserIndex].userTodos[0][0].length}`
+        vacation.innerText = `${allUsers[currentUserIndex].userTodos[1][0].length}`
+        meeting.innerText = `${allUsers[currentUserIndex].userTodos[2][0].length}`
+        cooking.innerText = `${allUsers[currentUserIndex].userTodos[3][0].length}`
+        health.innerText = `${allUsers[currentUserIndex].userTodos[4][0].length}`
+        gift.innerText = `${allUsers[currentUserIndex].userTodos[5][0].length}`
+        leisure.innerText = `${allUsers[currentUserIndex].userTodos[6][0].length}`
+        payment.innerText = `${allUsers[currentUserIndex].userTodos[7][0].length}`
+        others.innerText = `${allUsers[currentUserIndex].userTodos[8][0].length}`
+        const changeLocation =(addTodoIndex, addTodoCategory)=>{
+            localStorage.setItem("addTodoIndex", JSON.stringify(addTodoIndex))
+            localStorage.setItem("addTodoCategory", addTodoCategory)
+            window.location.href = "addingTodoPage.html"
+        }
+        const signOut = ()=>{
+            currentUserIndex = null
+            localStorage.setItem("currentUserIndex", JSON.stringify(currentUserIndex))
+            // window.location.href = "todoSignInPage.html"
+            userLogInCheck()
+        }
+        const userLogInCheck = ()=>{
+            currentUserIndex = JSON.parse(localStorage.getItem("currentUserIndex"))
+            if (currentUserIndex == null) {
+                window.location.href = "todoSignInPage.html"
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>

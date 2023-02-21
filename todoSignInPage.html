@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="shortcut icon" href="todo.jpeg" type="image/x-icon">
+</head>
+<style>
+    @media (max-width: 800px){
+        .smallDeviceWidth{
+        width: 80% !important;
+        }
+    }
+</style>
+
+<body class="bg-warning">
+    <div class="smallDeviceWidth w-50 d-block mx-auto my-5">
+        <p id="allDetailsRequirement" class="text-center text-danger"></p>
+        <input type="email" class="form-control my-2" placeholder="Email" id="eMail">
+        <input type="password" class="form-control my-2" placeholder="Password" id="password">
+        <button onclick="signIn()" class="w-100 my-2 btn btn-success">Sign In</button>
+        <a href="./todoSignUpPage.html">Don't have an account yet?</a>
+    </div>
+
+
+    <script>
+        let currentUserIndex = null
+        let correctUserDetails = false
+        let allUsers = JSON.parse(localStorage.getItem("allUsers"))
+        // console.log(allUsers)
+        const signIn = ()=> {
+            // console.log(allUsers)
+            if (eMail.value.trim()=="" || password.value.trim()=="") {
+                allDetailsRequirement.innerText = `Fill in all the required information to sign in`
+                setTimeout(()=>allDetailsRequirement.innerText = "", 3000)
+            } else{
+            allUsers.map((user, index)=>{
+                if (user.eMail==eMail.value && user.password==password.value) {
+                    currentUserIndex = index
+                    correctUserDetails = true
+                    // console.log(correctUserDetails)
+                    localStorage.setItem("currentUserIndex", JSON.stringify(currentUserIndex))
+                }
+            })
+            if (correctUserDetails==true) {
+                window.location.href = "todoDashboard.html"
+            } else{
+                allDetailsRequirement.innerText = `User not found`
+                setTimeout(()=>allDetailsRequirement.innerText = "", 3000)
+            }
+        }
+        }
+    </script>
+</body>
+</html>
