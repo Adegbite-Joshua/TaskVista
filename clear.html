@@ -5,25 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../bootstrap-5.2.2-dist/css/bootstrap.css">
 </head>
-<body>
-    <input type="file" id="test" accept="image/png" onchange="show()" onload="load()">
-    <div id="showP"></div>
+<body class="position-relative">
+    <div id="wait" class="position-absolute bottom-0 top-0 end-0 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center" style="z-index: 999999999999999;">
+        <button onclick="showIt()">Show</button>
+    </div>
+
+    
+    <input type="checkbox" id="test" onchange="checkValue()">
+
     <script>
+        const showIt = ()=>{
+            wait.classList.toggle("d-none")
+        }
+        const checkValue =()=>{
+            test.value.toggle("yes")
+            console.log(test.value)
+        }
         // localStorage.clear()
         // console.log(typeof(test.value))
-        let image = ""
-        const show =()=>{
-            // console.log("jkkj")
-            let file = new FileReader()
-            image = file.result
-            console.log(image)
-            showP.style.backgroundImage = `url(${image})`
-        }
-        const load=()=>{
-            
-        }
-        
     </script>
 </body>
 </html>
