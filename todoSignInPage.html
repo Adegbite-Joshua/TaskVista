@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - Task Vista</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bootstrap-5.2.2-dist/css/bootstrap.min.css">
     <link rel="shortcut icon" href="todo.jpeg" type="image/x-icon">
 </head>
 <style>
@@ -13,7 +15,26 @@
         font-family: 'Arial', sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f0f0f0; /* Light gray background */
+        background-color: #f0f0f0;
+        /* Light gray background */
+    }
+
+    header {
+        background-color: #fbd000;
+        /* Yellow header */
+        color: #2a652f;
+        /* Dark green text */
+        padding: 20px;
+        text-align: center;
+    }
+
+    footer {
+        background-color: #2a652f;
+        /* Dark green footer */
+        color: white;
+        padding: 10px;
+        text-align: center;
+        width: 100%;
     }
 
     .smallDeviceWidth {
@@ -55,7 +76,8 @@
 
     .signin-heading {
         text-align: center;
-        color: #333; /* Dark gray text */
+        color: #333;
+        /* Dark gray text */
         font-size: 24px;
         margin-bottom: 10px;
     }
@@ -85,8 +107,13 @@
 </style>
 
 <body>
+    <header>
+        <h1>Task Vista</h1>
+        <p>Your Task Management Solution</p>
+    </header>
+
     <div class="smallDeviceWidth signin-container">
-        <img class="brand-logo" src="your-logo.png" alt="Task Vista Logo">
+        <img class="brand-logo" src="todo.jpeg" alt="Task Vista Logo">
 
         <div class="signin-container-inner">
             <h2 class="signin-heading">Welcome back to Task Vista!</h2>
@@ -97,22 +124,19 @@
             <form>
                 <input type="email" class="form-control" placeholder="Email" id="eMail">
                 <input type="password" class="form-control" placeholder="Password" id="password">
-                <button onclick="signIn()" class="btn btn-success">Sign In</button>
+                <button type="button" onclick="signIn()" class="btn btn-success">Sign In</button>
             </form>
 
             <div class="signup-link">
                 <p>Don't have an account yet? <a href="./todoSignUpPage.html">Sign Up here</a></p>
             </div>
-
-            <div class="additional-ui">
-                <div class="forgot-password-link">
-                    <a href="#">Forgot your password?</a>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and Popper.js CDN (required for Bootstrap components) -->
+    <footer>
+        <p>&copy; 2024 Task Vista. All rights reserved.</p>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -149,4 +173,5 @@
         };
     </script>
 </body>
+
 </html>
